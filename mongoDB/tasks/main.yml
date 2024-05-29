@@ -1,0 +1,10 @@
+---
+- name: installing
+  ansible.builtin.include_tasks: install.yml
+- name: config
+  ansible.builtin.include_tasks: config.yml
+- name: service
+  ansible.builtin.include_tasks: service.yml
+- name: standalone_check
+  ansible.builtin.include_tasks: standalone_check.yml
+

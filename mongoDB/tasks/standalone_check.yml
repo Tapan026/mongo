@@ -1,0 +1,11 @@
+---
+- name: Check if MongoDB is running in standalone mode
+  shell: |
+    mongosh --quiet --eval "db.isMaster().ismaster"
+  register: is_master
+
+- name: Fail if MongoDB is not running in standalone mode
+  fail:
+    msg: "MongoDB is not running in standalone mode."
+  when: is_master.stdout != "true"
+
