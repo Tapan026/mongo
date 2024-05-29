@@ -1,5 +1,11 @@
 ---
 mongodb_version: "7.0"
+mongodb_packages:
+  - mongodb-org
+  - mongodb-org-server
+  - mongodb-org-shell
+  - mongodb-org-mongos
+  - mongodb-org-tools
 mongodb_user: "mongo"
 mongodb_group: "mongo"
 mongodb_systemlog_dir: "/var/log/mongodb"
