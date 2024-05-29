@@ -1,13 +1,15 @@
 ---
 mongodb_version: "7.0"
+required_packages:
+  - gnupg
+  - curl
 mongodb_packages:
   - mongodb-org
   - mongodb-org-server
   - mongodb-org-shell
   - mongodb-org-mongos
   - mongodb-org-tools
-mongodb_user: "mongo"
-mongodb_group: "mongo"
+  
 mongodb_systemlog_dir: "/var/log/mongodb"
 mongodb_data_dir: "/var/lib/mongo"
 mongodb_bind_ip: "54.221.190.94"

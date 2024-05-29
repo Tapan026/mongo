@@ -1,0 +1,39 @@
+mongo_key_url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
+
+mongo_base_url: https://repo.mongodb.org/apt/ubuntu
+mongo_dist_url: jammy/mongodb-org/{{ mongodb_version }} multiverse
+mongo_dist_type: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg
+
+mongodb_user: ongodb
+mongodb_group: ongodb
+
+#key file
+mongo_authentication_keyname: mongo_authentication_key
+mongo_authentication_key: 
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAjYntVX6t548ad3D4RRIaaEjPYEbkcIOzvfEbNd38td1o60hZ
+deQ0lrnLheHeJVxrvkKsw8bqCS3psxR+JxFufr0W+SQcdqLu3M4KxhcvFvvWztmO
+1djepoU/dUOmqADLSz+P32erVIzR8J87HwCz8v5CaAYhhrVFCqa6bhNyglEl7Lwk
+ziH+f0+otOiiocMyg54Q2YGErbLTuDLRTe7HVSYLDQn7CBLbLZGNUmOWSB6KUxNH
+Bjv38earU8xLILAdDvBboKSD8kf0HkcP6zv5SClyclJCeI4YptDmD6XBW4a7wpgP
+CLBRPmsjEikjC/LTFzOTEjAEhKDUCzhFCniZmQIDAQABAoIBAEfxc9GhMoQhGTLd
+GVUCfqnDWKV3Y2ZNi29gvpQC4hEPGeV+QPrLpG94wRqsVF5pO9rZyTc6RHul+sQs
+BnOVSLTjKGo7ELy81O0nThKidi0YlXdO3muUcJfz4u2YFX4P6UW2aUsFRvETIyNL
+zKFVmiJJWzfE5gWy3gUr+lc5S1sxX+uxkCCz9VeFtUmDZ8knYpSV+WmXvq5DAY2Z
+rAuB0kMX3OunOAq/pj98+PGF2JF5H0K5bc83ggP8lJX4CRhhqL3V0wua1cm2blit
+6RtDmlrDiHgne66Lks5JKigjVzjvv8V2zD8+rG2IAF2szphtjmD7ysagIynAoZOr
+ay2S4gECgYEA4XF3jd3rMUj8gSKAVfr6Q0kdC5Bljq4OrZA7G8hy5jlehPs3+22K
+dzfMVtPCS6OnDodobDZ4cn7s7tNCCa47wHCKb3tAEeUQiUnxuIsaEyqytx+Wr/hZ
+Hw6gcslsQZhSzJG1mVDyrpUonLKXN19FFT8NpBCRbD89vm8MbMcN5sUCgYEAoLka
+0NWfo5BeXktkuUAe6ldVYrzN8Qi6KPrBaQBWBnM/iAKKp21ZCzDECpwmQV1CuolT
+bU/YiaoSYpmG0eub8iPxOlY5J0H+q+GkRF6PKn4gJNrZLQN4l4VI2qwtNUc0+VtB
+P3JO4gOZuAFITAiubVFOqmB1soIZd9IsWHCuNMUCgYEAii+N06SiZExTkif+uDUl
+r5aiOhNhXMqt7o9I2+fLHfkuSZ7fGrtzM049bz9PiiOe45X2WNYukCfivSU7BkoJ
+EBUrldfbVtysfSqZAsAo1HTIpNy09dnpbtL9YD68n5xprEDoKjjm+EIvaZVCgUth
+QfurNdR9/vbottDEsex1Re0CgYEAkLic0NbKvHlOwBGbTMPUEqc5F4Ny3UtCdYv1
+hBrtWzmDR3EicMghmdX7cKJSQCE96MGnAZMYJD2j+GzN3VAOR+bdW+4v4I2oSBUR
+2Q5cU6LmRslZLRMnDyjRBTZsLsFDjhUBl6PSK+maDPn6o5xdk8nWz8uzr10+mYoC
+rFAqTRECgYB51mJme4bldB3SBi2ZJqlZWhPr1SpeIR8gJ6VOcaovUF1ifMKseOB1
+MbufkCwUhifCRZ/eTOmu2ldPrsHKrd/xAsB09eqXt0tNQZZMcoZpdrXac2XXRvJk
+5xEwIb5lhl4dsnRP1fZh9aN/9e+4Um3K8xLFnYW+lDDttXh+UxYSHA==
+-----END RSA PRIVATE KEY-----
