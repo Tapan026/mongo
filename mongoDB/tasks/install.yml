@@ -1,37 +1,31 @@
 ---
 - name: Update apt package list
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
 
 - name: Install gnupg and curl
-  apt:
-    name: 
+  ansible.builtin.apt:
+    name:
       - gnupg
       - curl
     state: present
 
 - name: Add MongoDB GPG key
-  command: curl -fsSL https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg
-  args:
-    creates: "/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg"
-
-- name: Add MongoDB repository
-  copy:
-    dest: "/etc/apt/sources.list.d/mongodb-org-{{ mongodb_version }}.list"
-    content: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse"
-
-- name: Update apt package list after adding MongoDB repo
-  apt:
-    update_cache: yes
-
-- name: Install MongoDB
-  apt:
-    name:
-      - mongodb-org
+  ansible.builtin.apt_key:
+    url: "https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc"
     state: present
 
-- name: Install MongoDB Shell (mongosh)
-  apt:
-    name: mongodb-database-tools
+- name: Add MongoDB repository
+  ansible.builtin.apt_repository:
+    repo: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse"
+    filename: "mongodb-org-{{ mongodb_version }}"
+
+- name: Update apt package list after adding MongoDB repo
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install MongoDB packages
+  ansible.builtin.apt:
+    name: "{{ mongodb_packages }}"
     state: present
 

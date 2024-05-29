@@ -1,7 +1,7 @@
 ---
-- name: Create MongoDB service file from template
-  template:
-    src: mongod.service.j2
+- name: Copy MongoDB service file
+  copy:
+    src: ../file/mongod.service
     dest: /etc/systemd/system/mongod.service
     owner: root
     group: root
@@ -13,4 +13,5 @@
     name: mongod
     enabled: yes
     state: started
+
 
