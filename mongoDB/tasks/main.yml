@@ -1,0 +1,10 @@
+---
+- name: installing mongoDB
+  ansible.builtin.include_tasks: install.yml
+- name: configuring user,group,log_director & data_directory 
+  ansible.builtin.include_tasks: config.yml
+- name: setup service file for MongoDb
+  ansible.builtin.include_tasks: service.yml
+- name: check if it is standalone server or not 
+  ansible.builtin.include_tasks: standalone_check.yml
+

@@ -1,0 +1,7 @@
+mongo_key_url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
+
+mongo_base_url: https://repo.mongodb.org/apt/ubuntu
+mongo_repo_url: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse
+
+mongodb_user: mongodb
+mongodb_group: mongodb

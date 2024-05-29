@@ -1,0 +1,17 @@
+---
+- name: Copy MongoDB service file
+  copy:
+    src: ../file/mongod.service
+    dest: /etc/systemd/system/mongod.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart MongoDB
+
+- name: Enable and start MongoDB service
+  service:
+    name: mongod
+    enabled: yes
+    state: started
+
+
