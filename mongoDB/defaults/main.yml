@@ -4,8 +4,8 @@ mongo_base_url: https://repo.mongodb.org/apt/ubuntu
 mongo_dist_url: jammy/mongodb-org/{{ mongodb_version }} multiverse
 mongo_dist_type: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg
 
-mongodb_user: ongodb
-mongodb_group: ongodb
+mongodb_user: mongodb
+mongodb_group: mongodb
 
 #key file
 mongo_authentication_keyname: mongo_authentication_key
