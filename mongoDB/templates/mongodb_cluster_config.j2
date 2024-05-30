@@ -1,0 +1,18 @@
+systemLog:
+  destination: file
+  path: "{{ mongodb_systemlog_dir }}/mongod.log"
+  logAppend: true
+storage:
+  dbPath: "{{ mongodb_data_dir }}"
+  journal:
+    enabled: true
+processManagement:
+  fork: true
+  pidFilePath: /var/run/mongodb/mongod.pid
+net:
+  bindIp: "{{ mongodb_bind_ip }}"
+  port: "{{ mongodb_port }}"
+replication:
+  replSetName: "{{ replica_set_name }}"
+security:
+  keyFile: "/path/on/remote/{{ mongodb_auth_key | basename }}"

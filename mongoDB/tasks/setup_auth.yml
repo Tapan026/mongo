@@ -1,0 +1,18 @@
+---
+- name: Place authentication key on each node
+  copy:
+    dest: "/etc/{{ mongo_authentication_keyname }}"
+    content: "{{ mongo_authentication_key }}"
+    mode: '0400'
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  when: authentication_enabled and replication_enabled
+
+
+- name: Use different mongod.conf for auth initialization
+  template:
+    src: mongo_auth.j2
+    dest: /etc/mongod.conf
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  notify: restart mongodb service
