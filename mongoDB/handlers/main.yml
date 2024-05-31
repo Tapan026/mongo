@@ -1,5 +1,10 @@
 ---
+- name: Update package cache
+  ansible.builtin.apt:
+    update_cache: yes
+    
 - name: Restart MongoDB
   service:
     name: mongod
     state: restarted
+

@@ -1,8 +1,9 @@
 ---
-- name: Check MongoDB cluster status
-  command: mongosh --eval "rs.status()"
-  register: cluster_status
-  changed_when: false
+- name: Ensure MongoDB is running
+  service:
+    name: mongod
+    state: started
+    enabled: yes
 
 - name: Update MongoDB cluster configuration file on master node
   template:
@@ -11,15 +12,25 @@
   notify: restart mongodb
   when: inventory_hostname == mongodb_master_node
 
-- name: Ensure MongoDB is running
-  service:
-    name: mongod
-    state: started
-    enabled: yes
+- name: Check MongoDB cluster status
+    command: mongosh --eval "rs.status()"
+    register: cluster_status
+    changed_when: false
+    ignore_errors: true
 
 - name: Initialize the MongoDB replica set on the master node
-  command: mongosh --eval 'rs.initiate({_id: "{{ replica_set_name }}", members: [{ _id: 0, host: "{{ ansible_fqdn }}:{{ mongodb_port }}" }]})'
-  when: inventory_hostname == mongodb_master_node and cluster_status.stderr is search("no replset")
+  command: >
+    mongosh --eval 'rs.initiate({
+      _id: "{{ replica_set_name }}",
+      members: [
+        { _id: 0, host: "mongodb1:{{ mongodb_port }}" },
+        { _id: 1, host: "mongodb2:{{ mongodb_port }}" }
+      ]
+    })'
+  when: 
+    - inventory_hostname == mongodb_master_node
+    - cluster_status.stderr is search("no replset")
+
 
 - name: Add replica set members on the master node
   command: mongosh --eval 'rs.add("{{ host }}:{{ mongodb_port }}")'

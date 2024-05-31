@@ -5,20 +5,20 @@
 
 - name: Install gnupg and curl
   ansible.builtin.apt:
-    name:
-      - gnupg
-      - curl
+    name: "{{ required_packages }}"
     state: present
 
 - name: Add MongoDB GPG key
   ansible.builtin.apt_key:
-    url: "https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc"
+    url: "{{ mongo_key_url }}" 
     state: present
-
+  notify: Update package cache
+  
 - name: Add MongoDB repository
   ansible.builtin.apt_repository:
-    repo: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse"
+    repo: '{{ mongo_repo_url }}'
     filename: "mongodb-org-{{ mongodb_version }}"
+  notify: Update package cache
 
 - name: Update apt package list after adding MongoDB repo
   ansible.builtin.apt:
@@ -28,4 +28,3 @@
   ansible.builtin.apt:
     name: "{{ mongodb_packages }}"
     state: present
-

@@ -1,2 +1,9 @@
-[all]
-54.227.0.223 ansible_user=ubuntu
+[master]
+master-node-hostname ansible_host=54.227.0.223 ansible_user=ubuntu
+
+[slave]
+slave-node1-hostname ansible_host=172.31.19.133 ansible_user=ubuntu
+slave-node2-hostname ansible_host=172.31.23.47 ansible_user=ubuntu
+
+[all:children]
+master

@@ -1,5 +1,8 @@
 ---
 mongodb_version: "7.0"
+required_packages:
+  - gnupg
+  - curl
 mongodb_packages:
   - mongodb-org
   - mongodb-org-server
