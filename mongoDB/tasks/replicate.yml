@@ -1,9 +1,10 @@
 ---
-- name: Ensure MongoDB is running
-  service:
-    name: mongod
-    state: started
-    enabled: yes
+- name: initiate_mongo_replication |  Place replication Initiate script on master node
+  ansible.builtin.template:
+    src: repset_init.j2
+    dest: /tmp/repset_init.js
+    mode: "0666"
+  when: inventory_hostname == mongodb_master_node
 
 - name: Update MongoDB cluster configuration file on master node
   template:
@@ -13,7 +14,7 @@
   when: inventory_hostname == mongodb_master_node
 
 - name: Check MongoDB cluster status
-    command: mongosh --eval "rs.status()"
+  ansible.builtin.command: mongosh --eval "rs.status()"
     register: cluster_status
     changed_when: false
     ignore_errors: true

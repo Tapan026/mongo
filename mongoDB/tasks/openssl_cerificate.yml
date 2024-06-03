@@ -1,0 +1,175 @@
+---
+- name: certificate | Install required packages
+  ansible.builtin.package:
+    name: "{{ openssl_package }}"
+    state: present
+  when: openssl_package is defined and inventory_hostname in groups['master']
+
+- name: certificate | Create CA directory with correct permissions
+  ansible.builtin.file:
+    path: "{{ ca_directory_path }}"
+    state: directory
+    mode: "0755"
+
+- name: certificate | Check if private key already exists for root CA
+  ansible.builtin.stat:
+    path: "{{ ca_directory_path }}/{{ ca_private_key_name }}"
+  register: private_key
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Create private key with password protection
+  community.crypto.openssl_privatekey:
+    path: "{{ ca_directory_path }}/{{ ca_private_key_name }}"
+    passphrase: "{{ secret_ca_passphrase }}"
+    cipher: auto
+  when: (not private_key.stat.exists | default(false)) and inventory_hostname in groups['master']
+
+- name: certificate | Check if CSR name already exists
+  ansible.builtin.stat:
+    path: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
+  register: csr_name
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Create certificate signing request (CSR) for CA certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ ca_directory_path }}/{{ ca_private_key_name }}"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    common_name: myca
+    use_common_name_for_san: false
+    basic_constraints:
+      - CA:TRUE
+    basic_constraints_critical: true
+    key_usage:
+      - keyCertSign
+    key_usage_critical: true
+  register: ca_csr
+  when: not csr_name.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Create self-signed CA certificate from CSR
+  community.crypto.x509_certificate:
+    path: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
+    csr_content: "{{ ca_csr.csr }}"
+    privatekey_path: "{{ ca_directory_path }}/{{ ca_private_key_name }}"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    provider: selfsigned
+  when: not csr_name.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Create MongoDB certificate directory with correct permissions
+  ansible.builtin.file:
+    path: "{{ mongodb_ssl_directory }}"
+    state: directory
+    mode: "0755"
+
+- name: certificate | Check if MongoDB private key file already exists
+  ansible.builtin.stat:
+    path: "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}"
+  register: private_key_file
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Generate MongoDB private key
+  community.crypto.openssl_privatekey:
+    path: "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}"
+    passphrase: "{{ secret_ca_passphrase }}"
+    cipher: auto
+    size: 2048
+    state: present
+    mode: "0600"
+  when: not private_key_file.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Check if MongoDB certificate file already exists
+  ansible.builtin.stat:
+    path: "{{ mongodb_ssl_directory }}/{{ mongodb_crt }}"
+  register: crt_file
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Create certificate signing request (CSR) for new certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    subject_alt_name: "{{ collected_ips | map('regex_replace', '^', 'IP:') | list }}"
+  register: csr
+  when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Sign certificate with our CA
+  community.crypto.x509_certificate_pipe:
+    csr_content: "{{ csr.csr }}"
+    provider: ownca
+    ownca_path: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
+    ownca_privatekey_path: "{{ ca_directory_path }}/{{ ca_private_key_name }}"
+    ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    ownca_not_after: +365d
+    ownca_not_before: -1d
+  register: certificate
+  when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Write certificate file with correct permissions
+  ansible.builtin.copy:
+    dest: "{{ mongodb_ssl_directory }}/{{ mongodb_crt }}"
+    content: "{{ certificate.certificate }}"
+    mode: "0644"
+  when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Check if concatenated certificate file already exists
+  ansible.builtin.stat:
+    path: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
+  register: concatenated_file
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Create the concatenated certificate file
+  ansible.builtin.file:
+    path: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
+    state: touch
+    mode: "0644"
+  when: not concatenated_file.stat.exists | default(false) and inventory_hostname in groups['master']
+
+- name: certificate | Concatenate files into one certificate
+  ansible.builtin.shell: >
+    cat "{{ mongodb_ssl_directory }}/{{ mongodb_crt }}"
+    "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}" >
+    "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
+  when: not concatenated_file.stat.exists | default(false) and inventory_hostname in groups['master']
+  changed_when: true
+
+- name: certificate | Copy ca-cert to the local machine
+  ansible.builtin.fetch:
+    src: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
+    dest: ./certificate/{{ ca_cert_pem_name }}
+    flat: true
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Copy MongoDB certificate to the local machine
+  ansible.builtin.fetch:
+    src: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
+    dest: ./certificate/{{ concatenate_mongodb_pem_file }}
+    flat: true
+  when: inventory_hostname in groups['master']
+
+- name: certificate | Copy the file to the slave directory of ca-cert
+  ansible.builtin.copy:
+    src: ./certificate/{{ ca_cert_pem_name }}
+    dest: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
+    mode: "0644"
+  when: inventory_hostname in groups['mongo_slave']
+
+- name: certificate | Copy the file to the slave directory of the MongoDB certificate
+  ansible.builtin.copy:
+    src: ./certificate/{{ concatenate_mongodb_pem_file }}
+    dest: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
+    mode: "0644"
+  when: inventory_hostname in groups['mongo_slave']
+
+- name: certificate | Move back mongod.conf
+  ansible.builtin.template:
+    src: mongo_tls_conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Mongodb_restart
+    - "{{ 'Wait_till_mongodb_started' if replication_enabled == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
+  when: inventory_hostname in  groups['mongo_slave']
+
+- name: certificate | Flush all handlers at this point
+  ansible.builtin.meta: flush_handlers
+  when: inventory_hostname in groups['mongo_slave']
