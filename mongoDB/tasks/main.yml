@@ -1,16 +1,32 @@
 ---
-- name: installing mongoDB
+- name: Installing Required Packages and MongoDB
   ansible.builtin.include_tasks: install.yml
-- name: configuring user,group,log_director & data_directory 
+
+- name: configuring user,group,log_directory & data_directory   # Setting up Mongodb service & log Directory
   ansible.builtin.include_tasks: config.yml
+
 - name: setup service file for MongoDb
   ansible.builtin.include_tasks: service.yml
+
 - name: check if it is standalone server or not 
   ansible.builtin.include_tasks: standalone_check.yml
 
 - name: replicate slave nodes
   ansible.builtin.include_tasks: replicate.yml
-- name: creat users for monoDB
+
+- name: create users for monoDB
   ansible.builtin.include_tasks: monoDB.user_creation.yml
+
 - name: setup auth in nodes
   ansible.builtin.include_tasks: setup_auth.yml
+
+- name: Openssl Certification creation
+  ansible.builtin.include_tasks: openssl_cert.yml
+  when: Openssl_cert == True
+
+- name: Domain regstrar SSL
+  ansible.builtin.include_tasks: domain_cert.yml
+  when: Openssl_cert == False
+
+- name: Enabling mongodb Cluster
+  ansible.builtin.include_tasks: mongo_cluster_setup.yml

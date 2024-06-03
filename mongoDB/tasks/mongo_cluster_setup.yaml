@@ -1,0 +1,38 @@
+---
+- name: initiate_mongo_replication |  Place replication Initiate script on master node
+  ansible.builtin.template:
+    src: repset_init.j2
+    dest: /tmp/repset_init.js
+    mode: "0666"
+  when: inventory_hostname in groups['mongo_master']
+
+- name: initiate_mongo_replication |  Extract master private IP
+  ansible.builtin.set_fact:
+    master_ip: "{{ hostvars[groups['mongo_master'][0]]['host_private_ip'][0] }}"
+  run_once: true
+
+- name: initiate_mongo_replication |  Debug master_ip
+  ansible.builtin.debug:
+    var: master_ip
+
+- name: initiate_mongo_replication |  Check if replication is already configured
+  ansible.builtin.shell: |
+    mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
+    --host {{ master_ip }}:27017 \
+    --tlsCertificateKeyFile {{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }} \
+    --tlsCertificateKeyFilePassword {{ secret_ca_passphrase }} \
+    -u {{ mongo_root_admin_name }} -p {{ mongo_root_admin_pwd }}  --eval 'rs.status().ok'
+  register: replication_check
+  when: inventory_hostname in groups['mongo_master']
+  failed_when: replication_check.rc not in [0, 1]
+  changed_when: false
+
+- name: initiate_mongo_replication |  Initialize the Replica set
+  ansible.builtin.shell: |
+    mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
+    --host {{ master_ip }}:27017 \
+    --tlsCertificateKeyFile {{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }} \
+    --tlsCertificateKeyFilePassword {{ secret_ca_passphrase }} \
+    -u {{ mongo_root_admin_name }} -p {{ mongo_root_admin_pwd }} < /tmp/repset_init.js
+  changed_when: replication_check.stdout == "False"
+  when: inventory_hostname in groups['mongo_master']
