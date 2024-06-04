@@ -1,21 +1,39 @@
 ---
-required_packages:
-  - gnupg
-  - curl
-mongodb_packages:
-  - mongodb-org
-  - mongodb-org-server
-  - mongodb-org-shell
-  - mongodb-org-mongos
-  - mongodb-org-tools
+# Mongo Installation parameters
+mongo_version: "7.0"
 
-mongodb_systemlog_dir: "/var/log/mongodb"
-mongodb_data_dir: "/var/lib/mongo"
-mongodb_bind_ip: "0.0.0.0"
-mongodb_port: 27017
+# Mongo Configuration parameters
+mongo_port: 27017
 
-username: UserAdmin
-admin_pwd: pwd@123
-root_adminuser: RootAdmin
-root_adminpass: pwd@1234
-replica_set_name: "rs0"
+# Mongo Replication parameter
+mongo_repl_set_name: repl
+mongo_heartbeat_timeout_secs: 10
+mongo_election_timeout_millisec: 10000
+master_priority: 5
+slave_priority: 1
+
+# Openssl Parameter
+tls_enabled: true
+openssl_package: openssl
+ca_directory_path: /etc/ssl/myca
+ca_private_key_name: ca-key.pem
+ca_cert_pem_name: ca-cert.pem
+mongodb_ssl_directory: /etc/ssl/mongodb
+mongodb_private_key_name: mongodb-key.pem
+mongodb_csr: mongodb-csr.pem
+mongodb_cert_pem: mongodb-cert.pem
+concatenate_mongodb_pem_file: mongodb.pem
+mongodb_crt: mongo.crt
+secret_ca_passphrase: "qvcJSJ22B2EnsaA"
+common_name: Test
+country_name: US
+state_or_province_name: Noida
+locality_name: Noida
+organization_name: IT
+days: 365
+tls_mode: requireTLS
+allow_connection_without_certificates: "false"
+
+Openssl_cert: True
+authentication_enabled: true
+replication_enabled: true

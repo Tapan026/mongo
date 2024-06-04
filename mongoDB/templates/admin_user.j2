@@ -1,0 +1,25 @@
+use admin;
+
+db.createUser({
+  user: "root",
+  pwd: "passw0rd",
+  roles: [
+    { role: "root", db: "admin" }
+  ]
+});
+
+db.createUser({
+  user: "backupuser",
+  pwd: "passw0rd",
+  roles: [
+    { role: "root", db: "admin" }
+  ]
+});
+
+db.createUser({
+  user: "useradmin",
+  pwd: "passw0rd",
+  roles: [
+    { role: "root", db: "admin" }
+  ]
+});

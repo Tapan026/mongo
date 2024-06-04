@@ -17,5 +17,5 @@
   service:
     name: mongod
     state: restarted
-  listen: restart_mongo
+  listen: Mongodb_restart
 

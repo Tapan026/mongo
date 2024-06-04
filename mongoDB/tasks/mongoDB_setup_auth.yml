@@ -1,0 +1,48 @@
+---
+- name: setup_authentication_mongo | Place the user creation script on master node
+  ansible.builtin.template:
+    src: admin_user.j2
+    dest: /tmp/admin_user.js
+    mode: "0755"
+  register: init_replica_set
+  when:
+    - inventory_hostname in groups['mongo_master']
+
+- name: setup_authentication_mongo | Starting Mongod Service
+  ansible.builtin.service:
+    name: "{{ mongo_service_name }}"
+    state: started
+  when:
+    - inventory_hostname in groups['mongo_master']
+    - inventory_hostname in groups['mongo_slave']
+
+- name: setup_authentication_mongo | Check if MongoDB cluster user already exists
+  ansible.builtin.shell: "/usr/bin/mongosh --quiet --eval 'db.getSiblingDB(\"admin\").getCollection(\"system.users\").find({user: \"root\"}).count()'"
+  register: user_exists
+  changed_when: user_exists.rc == 1
+  when: inventory_hostname in groups['mongo_master']
+
+- name: setup_authentication_mongo | Creating required MongoDB cluster user
+  ansible.builtin.shell: /usr/bin/mongosh < /tmp/admin_user.js
+  when: inventory_hostname in groups['mongo_master']
+  changed_when: user_exists.rc == 1
+
+- name: setup_authentication_mongo | Move back mongod.conf
+  ansible.builtin.template:
+    src: mongo_conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Mongodb_restart
+    - "{{ 'Wait_till_mongodb_started' if replication_enabled == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
+  when:
+    - inventory_hostname in groups['mongo_master']
+    - inventory_hostname in groups['mongo_slave']
+
+- name: setup_authentication_mongo | Flush all handlers at this point
+  ansible.builtin.meta: flush_handlers
+  when:
+    - inventory_hostname in groups['mongo_master']
+    - inventory_hostname in groups['mongo_slave']

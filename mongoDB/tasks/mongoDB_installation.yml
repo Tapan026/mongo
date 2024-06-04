@@ -28,3 +28,6 @@
   ansible.builtin.apt:
     name: "{{ mongodb_packages }}"
     state: present
+  become: true
+  notify:
+    - restart_mongo

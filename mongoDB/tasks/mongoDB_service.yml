@@ -1,0 +1,28 @@
+---
+- name: Copy MongoDB service file
+  copy:
+    src: mongod.service
+    dest: /etc/systemd/system/mongod.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reload_service_systemd
+
+- name: mongo_service_file_setup |  Add symlink for systemd
+  ansible.builtin.file:
+    src: /lib/systemd/system/{{ mongo_service_name }}.service
+    dest: /etc/systemd/system/multi-user.target.wants/{{ mongo_service_name }}.service
+    state: link
+  notify: Reload_systemd
+
+- name: mongo_service_file_setup |  Flush all handlers at this point
+  ansible.builtin.meta: flush_handlers
+
+- name: mongo_service_file_setup |  Enable mongo service
+  ansible.builtin.service:
+    name: "{{ mongo_service_name }}"
+    enabled: "yes"
+  when: ansible_service_mgr == "systemd"
+
+
+

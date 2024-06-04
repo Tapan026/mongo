@@ -1,7 +1,56 @@
 mongodb_version: "7.0"
+required_packages:
+  - gnupg
+  - curl
+mongodb_packages:
+  - mongodb-org
+  - mongodb-org-server
+  - mongodb-org-shell
+  - mongodb-org-mongos
+  - mongodb-org-tools
+
+# Mongo Configuration parameters
+mongo_systemlog_destination: file
+mongo_systemlog_path: /var/log/mongodb/mongod.log
+mongo_db_path: "{{ '/var/lib/mongodb' if ansible_os_family == 'Debian' else '/var/lib/mongo' }}"
+mongo_pid_file_path: /var/run/mongodb/mongod.pid
+mongo_time_zone_info: /usr/share/zoneinfo
+mongo_port: 27017
+mongo_bind_ip: "0.0.0.0"
+mongo_service_name: mongod
+mongo_service_user: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
+mongo_service_group: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
+
+
+mongo_user_admin_name: "UserAdmin"
+mongo_user_admin_pwd: "pwd@123"
+mongo_root_admin_name: "RootAdmin"
+mongo_root_admin_pwd: "pwd@1234"
+mongo_root_backup_name: ""
+mongo_root_backup_pwd: ""
+mongo_custom_users: ""
+mongo_authentication_keyname: mongo_authentication_key
+
+#mongi instalatation 
 mongo_key_url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
 mongo_base_url: https://repo.mongodb.org/apt/ubuntu
 mongo_repo_url: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse
 mongodb_user: mongodb
 mongodb_group: mongodb
-mongo_authentication_keyname: mongoDB/defaults/mongo_authentication_key
+mongo_authentication_key: |
+  yI7blKSIimHaGvZTxjlfSDLgeOGkx4g1wT/U5hvHVWeKLKcbtLVLfmtINPTkzSxz
+  0HHazYeG4b0Mq2A9qwL1toE4ieuVOqVXW/XRnUApneOVgvbCzS2UbUWRxTSyBkU1
+  t4vVM3837PowTLU84L52YDD/0vq/Q9WLpytToKxS2q5ibFumDxbNQcY0AnrBtSRq
+  F1Zg6EbtGgbQMI5YMGCP7gE1CfRzpq42cAGVhhELbgiXK6NNY14ir8khpbblAIiO
+  AqoEhkB/y3fwbLyNI+sKkQ0ospFZo39E780Vrajc5ze63Xw82NANd3gsBbWDGbk7
+  mRqMFYwtB/Prrtdde7/UHF8txDImtvYXQ8Tt3ONBR/qxGE7LhH0NlZxUM+YrlVNM
+  Vc3oYA2gZUWJDlQsnJxBOl8nFCfJEqGfSMIxgaJ5xiOXdzKAQ8Akjx1Magoe63T2
+  azDWNpMgubc0htEkv/GQ5wy574heiFNmysASb4aSsb+T2s/LIPkwdYf4cbJs4IQl
+  PLMvjA3dUcLCttHXEm9LjSctXm9lXbw6teWvak8mou72Gf1bC8NqL/ZRTWnGwqfz
+  YhBRbpczc1JcpQdTpufIPK76OvJBtfP4N/eF7qGedcn1mRIqSHy/c1PhBvRRmVx/
+  kWOmcqVkJCPU6D0S6+PuA5w6oZLBlFZFv2wsUAMFtVubtIMltmHNExmoA0N6WX7O
+  NCLjoEkw0td6BMFBJxnDbZ3KMNu1yVq7tqcrgYNMXhzRrk4S7tiF2SKhqHldLxxz
+  k2IlkLH+x494FgIIcUIN/W5Bn5psDr8Bm+4y4bfwLM7SFNo+j7QR8mSbrhQX03eP
+  90L/IMP2RZr+xtWXhRpLZGZYySuurP/IMKUcL8kn/eKkRpReBWwy8d2fHUyU/DVx
+  LTeKB70l9wCHoAPfqKedZDmXBnXAh9XojhUmc4/hEn0w7QfmBzzXjqjxsvK//dru
+  lGj3LmeD+HErN8fsp+wm7Q74HPh0d3NZ0T+Rd4yXLVITSutyMNticcupU2ZGg50r
