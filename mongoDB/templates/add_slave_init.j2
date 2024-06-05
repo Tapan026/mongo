@@ -1,0 +1,3 @@
+{% for item in groups['new_slave'] %}
+rs.add("{{ item }}:{{ mongo_port }}")
+{% endfor %}

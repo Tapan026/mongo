@@ -90,6 +90,8 @@
       - "IP:172.31.23.47"
       - "IP:172.31.19.133"
       - "IP:172.31.28.146"
+      - "IP:172.31.25.3"
+      - "IP:172.31.28.74"
   register: csr
   when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['mongo_master']
 

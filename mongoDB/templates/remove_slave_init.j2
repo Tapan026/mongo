@@ -1,0 +1,3 @@
+{% for item in groups['remove_slave'] %}
+rs.remove("{{ item }}:{{ mongo_port }}")
+{% endfor %}

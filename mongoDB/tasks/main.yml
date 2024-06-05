@@ -1,18 +1,18 @@
----
-- name: Installing Required Packages and MongoDB
-  ansible.builtin.include_tasks: mongoDB_installation.yml
-  
-- name: configuring user,group,log_directory & data_directory   # Setting up Mongodb service & log Directory
-  ansible.builtin.include_tasks: mongoDB_config.yml
+# ---
+# - name: Installing Required Packages and MongoDB
+#   ansible.builtin.include_tasks: mongoDB_installation.yml
 
-- name: setup service file for MongoDb
-  ansible.builtin.include_tasks: mongoDB_service.yml
-  
-- name: check if it is standalone server or not
-  ansible.builtin.include_tasks: standalone_check.yml
+# - name: configuring user,group,log_directory & data_directory   # Setting up Mongodb service & log Directory
+#   ansible.builtin.include_tasks: mongoDB_config.yml
 
-- name: setup auth in nodes
-  ansible.builtin.include_tasks: mongoDB_setup_auth.yml
+# - name: setup service file for MongoDb
+#   ansible.builtin.include_tasks: mongoDB_service.yml
+
+# - name: check if it is standalone server or not
+#   ansible.builtin.include_tasks: standalone_check.yml
+
+# - name: setup auth in nodes
+#   ansible.builtin.include_tasks: mongoDB_setup_auth.yml
 
 - name: Openssl Certification creation
   ansible.builtin.include_tasks: openssl_cert.yml
@@ -24,3 +24,11 @@
 
 - name: Enabling mongodb Cluster
   ansible.builtin.include_tasks: mongo_cluster_setup.yml
+
+- name: add slaves
+  ansible.builtin.include_tasks: add_slave.yml
+
+- name: remove slaves
+  ansible.builtin.include_tasks: remove_slave.yml
+
+  

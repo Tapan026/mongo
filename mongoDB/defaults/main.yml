@@ -2,6 +2,7 @@ mongodb_version: "7.0"
 required_packages:
   - gnupg
   - curl
+  - pymongo
 mongodb_packages:
   - mongodb-org
   - mongodb-org-server

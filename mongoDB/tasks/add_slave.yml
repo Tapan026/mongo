@@ -1,0 +1,21 @@
+---
+- name: initiate_mongo_replication |  Place Add  Slave script on master node
+  ansible.builtin.template:
+    src: add_slave_init.j2
+    dest: /tmp/add_slave_init.js
+    mode: "0666"
+  when: inventory_hostname in groups['mongo_master']
+
+- name: Adding new Slave
+  ansible.builtin.shell: |
+    mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
+    --host {{ master_ip }}:27017 \
+    --tlsCertificateKeyFile {{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }} \
+    --tlsCertificateKeyFilePassword {{ secret_ca_passphrase }} \
+    -u {{ mongo_root_admin_name }} -p {{ mongo_root_admin_pwd }} < /tmp/add_slave_init.js
+  when: inventory_hostname in groups['mongo_master']
+  register: replication_add_result_slave
+
+- name: Show replication result for additional Slave added
+  ansible.builtin.debug:
+    var: replication_add_result_slave
