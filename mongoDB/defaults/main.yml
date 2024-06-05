@@ -22,10 +22,10 @@ mongo_service_user: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod'
 mongo_service_group: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
 
 
-mongo_user_admin_name: "UserAdmin"
-mongo_user_admin_pwd: "pwd@123"
-mongo_root_admin_name: "RootAdmin"
-mongo_root_admin_pwd: "pwd@1234"
+mongo_user_admin_name: "useradmin"
+mongo_user_admin_pwd: "passw0rd"
+mongo_root_admin_name: "root"
+mongo_root_admin_pwd: "passw0rd"
 mongo_root_backup_name: ""
 mongo_root_backup_pwd: ""
 mongo_custom_users: ""

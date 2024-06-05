@@ -37,3 +37,4 @@ allow_connection_without_certificates: "false"
 Openssl_cert: True
 authentication_enabled: true
 replication_enabled: true
+master_ip: 172.31.28.146

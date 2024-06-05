@@ -170,8 +170,7 @@
     mode: "0644"
   notify:
     - Mongodb_restart
-    - "{{ 'Wait_till_mongodb_started' if replication_enabled == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
-  when: inventory_hostname in  groups['mongo_slave']
+    - "{{ 'wait_till_mongodb_started' if replication_enabled == 'true' else 'wait_till_mongodb_started_on_localhost' }}"
 
 - name: certificate | Flush all handlers at this point
   ansible.builtin.meta: flush_handlers

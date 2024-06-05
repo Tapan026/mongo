@@ -19,3 +19,9 @@
     state: restarted
   listen: Mongodb_restart
 
+- name: wait_till_mongodb_started_on_localhost
+  wait_for:
+    host: "127.0.0.1"
+    port: "{{ mongo_port }}"
+    delay: 5
+    timeout: 120
