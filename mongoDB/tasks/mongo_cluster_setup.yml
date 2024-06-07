@@ -1,12 +1,12 @@
 ---
-- name: initiate_mongo_replication |  Place replication Initiate script on master node
+- name: Initiate_mongo_replication |  Place replication Initiate script on master node
   ansible.builtin.template:
     src: repset_init.j2
     dest: /tmp/repset_init.js
     mode: "0666"
   when: inventory_hostname in groups['mongo_master']
 
-- name: initiate_mongo_replication |  Check if replication is already configured
+- name: Initiate_mongo_replication |  Check if replication is already configured
   ansible.builtin.shell: |
     mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
     --host {{ master_ip }}:27017 \

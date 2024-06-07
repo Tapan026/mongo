@@ -7,20 +7,20 @@
   listen: reload_service_systemd
 
 - name: Enable and start MongoDB service
-  service:
+  ansible.builtin.systemd_service:
     name: mongod
-    enabled: yes
+    enabled: true
     state: started
   listen: enable_start_mongo
- 
+
 - name: Restart MongoDB
-  service:
+  ansible.builtin.systemd_service:
     name: mongod
     state: restarted
   listen: Mongodb_restart
 
-- name: wait_till_mongodb_started_on_localhost
-  wait_for:
+- name: Wait_till_mongodb_started_on_localhost
+  ansible.builtin.wait_for:
     host: "127.0.0.1"
     port: "{{ mongo_port }}"
     delay: 5

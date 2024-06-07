@@ -1,11 +1,10 @@
 ---
 - name: Check if MongoDB is running in standalone mode
-  shell: |
+  ansible.builtin.shell: |
     mongosh --quiet --eval "db.isMaster().ismaster"
   register: is_master
 
 - name: Fail if MongoDB is not running in standalone mode
-  fail:
+  ansible.builtin.fail:
     msg: "MongoDB is not running in standalone mode."
   when: is_master.stdout != "true"
-

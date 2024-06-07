@@ -1,5 +1,5 @@
 ---
-- name: initiate_mongo_replication |  Place Add  Slave script on master node
+- name: Initiate_mongo_replication |  Place Add  Slave script on master node
   ansible.builtin.template:
     src: add_slave_init.j2
     dest: /tmp/add_slave_init.js

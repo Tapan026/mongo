@@ -1,0 +1,9 @@
+---
+- name: Pre-requistes |   Store individual host IP address
+  ansible.builtin.set_fact:
+    individual_host_ip: "{{ inventory_hostname }}"
+
+- name: Pre-requistes |   Collect IP addresses from all hosts
+  ansible.builtin.set_fact:
+    collected_ips: "{{ ansible_play_hosts_all | map('extract', hostvars, 'individual_host_ip') | list }}"
+  run_once: true

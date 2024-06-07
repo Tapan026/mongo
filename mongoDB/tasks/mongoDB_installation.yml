@@ -1,7 +1,7 @@
 ---
 - name: Update apt package list
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
 
 - name: Install gnupg and curl
   ansible.builtin.apt:
@@ -10,10 +10,10 @@
 
 - name: Add MongoDB GPG key
   ansible.builtin.apt_key:
-    url: "{{ mongo_key_url }}" 
+    url: "{{ mongo_key_url }}"
     state: present
   notify: Update package cache
-  
+
 - name: Add MongoDB repository
   ansible.builtin.apt_repository:
     repo: '{{ mongo_repo_url }}'
@@ -22,7 +22,7 @@
 
 - name: Update apt package list after adding MongoDB repo
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
 
 - name: Install MongoDB packages
   ansible.builtin.apt:

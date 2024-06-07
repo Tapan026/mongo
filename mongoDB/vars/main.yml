@@ -34,7 +34,7 @@ days: 365
 tls_mode: requireTLS
 allow_connection_without_certificates: "false"
 
-Openssl_cert: True
+Openssl_cert: true
 authentication_enabled: true
 replication_enabled: true
-master_ip: 172.31.28.146
+master_ip: 52.91.133.226

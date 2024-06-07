@@ -2,7 +2,7 @@ mongodb_version: "7.0"
 required_packages:
   - gnupg
   - curl
-  - pymongo
+
 mongodb_packages:
   - mongodb-org
   - mongodb-org-server
@@ -22,7 +22,6 @@ mongo_service_name: mongod
 mongo_service_user: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
 mongo_service_group: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
 
-
 mongo_user_admin_name: "useradmin"
 mongo_user_admin_pwd: "passw0rd"
 mongo_root_admin_name: "root"
@@ -32,7 +31,7 @@ mongo_root_backup_pwd: ""
 mongo_custom_users: ""
 mongo_authentication_keyname: mongo_authentication_key
 
-#mongi instalatation 
+# mongi instalatation
 mongo_key_url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
 mongo_base_url: https://repo.mongodb.org/apt/ubuntu
 mongo_repo_url: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse
