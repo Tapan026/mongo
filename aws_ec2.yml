@@ -10,11 +10,12 @@ keyed_groups:
     prefix: ""
     separator: ""
 
-# hostnames:
-#   - network_interface.association.public_ip
+hostnames:
+  # Order of precedence for hostname variables
+  - name: private-ip-address
 
 compose:
-  ansible_host: private_ip_address
+  ansible_host: ip_address
   ansible_user: ubuntu
   ansible_ssh_private_key_file: "/home/ubuntu/mongo/key01.pem"
 groups:
