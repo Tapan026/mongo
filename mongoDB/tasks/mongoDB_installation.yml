@@ -8,17 +8,17 @@
     name: "{{ required_packages }}"
     state: present
 
-- name: Add MongoDB GPG key
-  ansible.builtin.apt_key:
+- name: Import MongoDB GPG key
+  apt_key:
     url: "{{ mongo_key_url }}"
     state: present
-  notify: Update package cache
+    validate_certs: yes
+    keyring: "{{ mongodb_gpg_keyring }}"
 
 - name: Add MongoDB repository
   ansible.builtin.apt_repository:
     repo: '{{ mongo_repo_url }}'
     filename: "mongodb-org-{{ mongodb_version }}"
-  notify: Update package cache
 
 - name: Update apt package list after adding MongoDB repo
   ansible.builtin.apt:
@@ -30,4 +30,4 @@
     state: present
   become: true
   notify:
-    - restart_mongo
+    - Mongodb_restart

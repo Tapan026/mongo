@@ -97,18 +97,13 @@
   register: ca_csr
   when: not csr_name.stat.exists | default(false) and inventory_hostname in groups['mongo_master']
 
-# - name: Certificate | Create certificate signing request (CSR) for new certificate
-#   community.crypto.openssl_csr_pipe:
-#     privatekey_path: "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}"
-#     privatekey_passphrase: "{{ secret_ca_passphrase }}"
-#     subject_alt_name:
-#       - "IP:172.31.23.47"
-#       - "IP:172.31.19.133"
-#       - "IP:172.31.28.146"
-#       - "IP:172.31.25.3"
-#       - "IP:172.31.28.74"
-#   register: csr
-#   when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['mongo_master']
+- name: certificate | Create certificate signing request (CSR) for new certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ mongodb_ssl_directory }}/{{ mongodb_private_key_name }}"
+    privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    subject_alt_name: "{{ collected_ips | map('regex_replace', '^', 'IP:') | list }}"
+  register: csr
+  when: not crt_file.stat.exists | default(false) and inventory_hostname in groups['mongo_master']
 
 - name: Certificate | Sign certificate with our CA
   community.crypto.x509_certificate_pipe:
