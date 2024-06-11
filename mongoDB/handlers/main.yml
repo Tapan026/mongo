@@ -1,27 +1,25 @@
 ---
-- name: Restart service cron on centos, in all cases, also issue daemon-reload to pick up config changes
-  ansible.builtin.systemd_service:
-    state: restarted
-    daemon_reload: true
-    name: mongod
-  listen: reload_service_systemd
+- name: Reload_systemd
+  ansible.builtin.systemd:
+    daemon_reload: "yes"
 
-- name: Enable and start MongoDB service
-  ansible.builtin.systemd_service:
-    name: mongod
-    enabled: true
-    state: started
-  listen: enable_start_mongo
-
-- name: Restart MongoDB
-  ansible.builtin.systemd_service:
-    name: mongod
+- name: Mongodb_restart
+  ansible.builtin.service:
+    name: "{{ mongo_service_name }}"
     state: restarted
-  listen: Mongodb_restart
+
+- name: Wait_till_mongodb_started
+  ansible.builtin.wait_for:
+    host: "{{ item }}"
+    port: "{{ mongo_port }}"
+    timeout: 120
+  with_items:
+    - "{{ groups['mongo_master'] | list }}"
+    - "{{ groups['mongo_slave'] | list }}"
 
 - name: Wait_till_mongodb_started_on_localhost
   ansible.builtin.wait_for:
-    host: "127.0.0.1"
+    host: 127.0.0.1
     port: "{{ mongo_port }}"
     delay: 5
     timeout: 120

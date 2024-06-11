@@ -15,7 +15,7 @@ storage:
 # network interfaces
 net:
   port: {{ mongo_port }}
-{% if replication_enabled == true %}
+{% if mongodb_cluster == true %}
   bindIp: {{ mongo_bind_ip }}
   tls:
     mode: {{ tls_mode }}
@@ -30,12 +30,12 @@ net:
 {% if authentication_enabled == true %}
 security:
   authorization: enabled
-{% if replication_enabled == true %}
+{% if mongodb_cluster == true %}
   keyFile: /etc/{{ mongo_authentication_keyname }}
 {% endif %}
 {% endif %}
 
-{% if replication_enabled == true %}
+{% if mongodb_cluster == true %}
 replication:
   replSetName: {{ mongo_repl_set_name }}
 {% endif %}

@@ -1,35 +1,40 @@
 ---
-- name: Installing prerequesties
+- name: Installing prerequesties for Mongodb
   ansible.builtin.include_tasks: prerequesties.yml
+  when: standalone == True or mongodb_cluster == True
 
-- name: Installing Required Packages and MongoDB
+- name: Installing Required Packages and Mongodb
   ansible.builtin.include_tasks: mongoDB_installation.yml
+  when: standalone == True or mongodb_cluster == True
 
-- name: Configuring user,group,log_directory & data_directory   # Setting up Mongodb service & log Directory
+- name: Configuring user,group,log_directory & data_directory  
   ansible.builtin.include_tasks: mongoDB_config.yml
+  when: standalone == True or mongodb_cluster == True
 
-- name: Setup service file for MongoDb
+- name: Setup service file for Mongodb
   ansible.builtin.include_tasks: mongoDB_service.yml
+  when: standalone == True or mongodb_cluster == True 
 
-- name: Check if it is standalone server or not
-  ansible.builtin.include_tasks: standalone_check.yml
-
-- name: Setup auth in nodes
+- name: Setup auth in slave nodes
   ansible.builtin.include_tasks: mongoDB_setup_auth.yml
+  when: mongodb_cluster == True
 
-- name: Openssl Certification creation
+- name: Openssl Certification creation 
   ansible.builtin.include_tasks: openssl_cert.yml
-  when: Openssl_cert == True
+  when: openssl_cert == True and mongodb_cluster == True
 
-- name: Domain regstrar SSL
+- name: implement Domain registrar SSL
   ansible.builtin.include_tasks: domain_cert.yml
-  when: Openssl_cert == False
+  when: openssl_cert == False and mongodb_cluster == True
 
 - name: Enabling mongodb Cluster
   ansible.builtin.include_tasks: mongo_cluster_setup.yml
+  when: mongodb_cluster == True
 
-- name: Add slaves
+- name: Add slaves in mongodb Cluster
   ansible.builtin.include_tasks: add_slave.yml
+  when: mongodb_cluster == True
 
-- name: Remove slaves
+- name: Remove slaves from mongodb Cluster
   ansible.builtin.include_tasks: remove_slave.yml
+  when: mongodb_cluster == True

@@ -36,7 +36,7 @@
     mode: "0644"
   notify:
     - Mongodb_restart
-    - "{{ 'Wait_till_mongodb_started' if replication_enabled == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
+    - "{{ 'Wait_till_mongodb_started' if mongodb_cluster == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
   when:
     - inventory_hostname in groups['mongo_master']
     - inventory_hostname in groups['mongo_slave']

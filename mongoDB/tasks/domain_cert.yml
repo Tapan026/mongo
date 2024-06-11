@@ -1,20 +1,20 @@
 - name: Certificate | Copy MongoDB certificate to the local machine
   ansible.builtin.fetch:
     src: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
-    dest: ./certificates/{{ concatenate_mongodb_pem_file }}
+    dest: certificates/{{ concatenate_mongodb_pem_file }}
     flat: true
   when: inventory_hostname in groups['mongo_master']
 
 - name: Certificate | Copy the file to the slave directory of ca-cert
   ansible.builtin.copy:
-    src: ./certificates/{{ ca_cert_pem_name }}
+    src: certificates/{{ ca_cert_pem_name }}
     dest: "{{ ca_directory_path }}/{{ ca_cert_pem_name }}"
     mode: "0644"
   when: inventory_hostname in groups['mongo_slave']
 
 - name: Certificate | Copy the file to the slave directory of the MongoDB certificate
   ansible.builtin.copy:
-    src: ./certificates/{{ concatenate_mongodb_pem_file }}
+    src: certificates/{{ concatenate_mongodb_pem_file }}
     dest: "{{ mongodb_ssl_directory }}/{{ concatenate_mongodb_pem_file }}"
     mode: "0644"
   when: inventory_hostname in groups['mongo_slave']
@@ -28,7 +28,7 @@
     mode: "0644"
   notify:
     - Mongodb_restart
-    - "{{ 'Wait_till_mongodb_started' if replication_enabled == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
+    - "{{ 'Wait_till_mongodb_started' if mongodb_cluster == 'true' else 'Wait_till_mongodb_started_on_localhost' }}"
   when: inventory_hostname in  groups['mongo_slave']
 
 - name: Certificate | Flush all handlers at this point

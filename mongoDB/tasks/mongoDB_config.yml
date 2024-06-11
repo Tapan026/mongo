@@ -47,7 +47,7 @@
     mode: "0400"
     owner: "{{ mongo_service_user }}"
     group: "{{ mongo_service_group }}"
-  when: authentication_enabled and replication_enabled
+  when: authentication_enabled and mongodb_cluster
 
 - name: Configure | Mongo Configuration Setup
   ansible.builtin.template:

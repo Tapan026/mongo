@@ -5,7 +5,7 @@
     dest: /tmp/repset_init.js
     mode: "0666"
   when: inventory_hostname in groups['mongo_master']
-
+  
 - name: Initiate_mongo_replication |  Check if replication is already configured
   ansible.builtin.shell: |
     mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
@@ -17,6 +17,10 @@
   when: inventory_hostname in groups['mongo_master']
   failed_when: replication_check.rc not in [0, 1]
   changed_when: false
+
+- name: DEBUG
+  ansible.builtin.debug:
+    var: replication_check
 
 - name: Initialize the Replica set
   ansible.builtin.shell: |
