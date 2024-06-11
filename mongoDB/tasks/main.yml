@@ -4,11 +4,11 @@
   when: standalone == True or mongodb_cluster == True
 
 - name: Installing Required Packages and Mongodb
-  ansible.builtin.include_tasks: mongoDB_installation.yml
+  ansible.builtin.include_tasks: mongodb_installation.yml
   when: standalone == True or mongodb_cluster == True
 
 - name: Configuring user,group,log_directory & data_directory  
-  ansible.builtin.include_tasks: mongoDB_config.yml
+  ansible.builtin.include_tasks: mongodb_config.yml
   when: standalone == True or mongodb_cluster == True
 
 - name: Setup service file for Mongodb

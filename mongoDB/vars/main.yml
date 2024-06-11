@@ -4,8 +4,6 @@ mongo_version: "7.0"
 
 # Mongo Configuration parameters
 mongo_port: 27017
-standalone: False
-mongodb_cluster: True
 # Mongo Replication parameter
 mongo_repl_set_name: repl
 mongo_heartbeat_timeout_secs: 10
@@ -35,6 +33,8 @@ days: 365
 tls_mode: requireTLS
 allow_connection_without_certificates: "false"
 
+standalone: False
+mongodb_cluster: True
 openssl_cert: True
-authentication_enabled: true
+authentication_enabled: True
 master_ip: 172.31.56.61

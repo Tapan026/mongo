@@ -15,7 +15,7 @@ storage:
 # network interfaces
 net:
   port: {{ mongo_port }}
-{% if mongodb_cluster == true %}
+{% if mongodb_cluster == True %}
   bindIp: {{ mongo_bind_ip }}
   tls:
     mode: {{ tls_mode }}
@@ -27,7 +27,7 @@ net:
   bindIp: {{ mongo_bind_ip }}
 {% endif %}
 
-{% if authentication_enabled == true %}
+{% if authentication_enabled == True %}
 security:
   authorization: enabled
 {% if mongodb_cluster == true %}
