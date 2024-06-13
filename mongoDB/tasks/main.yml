@@ -11,10 +11,6 @@
   ansible.builtin.include_tasks: mongodb_config.yml
   when: standalone == True or mongodb_cluster == True
 
-# - name: Setup service file for Mongodb
-#   ansible.builtin.include_tasks: mongoDB_service.yml
-#   when: standalone == True or mongodb_cluster == True 
-
 - name: Setup auth in slave nodes
   ansible.builtin.include_tasks: mongoDB_setup_auth.yml
   when: mongodb_cluster == True
