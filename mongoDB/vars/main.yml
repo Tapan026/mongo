@@ -1,15 +1,23 @@
 ---
 # Mongo Installation parameters
 mongo_version: "7.0"
-
-# Mongo Configuration parameters
 mongo_port: 27017
+
 # Mongo Replication parameter
 mongo_repl_set_name: repl
 mongo_heartbeat_timeout_secs: 10
 mongo_election_timeout_millisec: 10000
 master_priority: 5
 slave_priority: 1
+
+# conditions
+standalone: False
+mongodb_cluster: True
+openssl_cert: True
+authentication_enabled: True
+
+# master server ip
+master_ip: 172.31.56.61
 
 # Openssl Parameter
 tls_enabled: True
@@ -32,9 +40,3 @@ organization_name: IT
 days: 365
 tls_mode: requireTLS
 allow_connection_without_certificates: "false"
-
-standalone: False
-mongodb_cluster: True
-openssl_cert: True
-authentication_enabled: True
-master_ip: 172.31.56.61

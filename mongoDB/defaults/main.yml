@@ -31,13 +31,15 @@ mongo_root_backup_pwd: ""
 mongo_custom_users: ""
 mongo_authentication_keyname: mongo_authentication_key
 
-# mongi instalatation
+# mongo installation
 mongo_key_url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
 mongodb_gpg_keyring: /usr/share/keyrings/mongodb-server-7.0.gpg
 mongo_base_url: https://repo.mongodb.org/apt/ubuntu
 mongo_repo_url: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-{{ mongodb_version }}.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/{{ mongodb_version }} multiverse
 mongodb_user: mongodb
 mongodb_group: mongodb
+
+# mongo autho key 
 mongo_authentication_key: |
   yI7blKSIimHaGvZTxjlfSDLgeOGkx4g1wT/U5hvHVWeKLKcbtLVLfmtINPTkzSxz
   0HHazYeG4b0Mq2A9qwL1toE4ieuVOqVXW/XRnUApneOVgvbCzS2UbUWRxTSyBkU1

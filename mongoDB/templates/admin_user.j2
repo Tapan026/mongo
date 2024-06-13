@@ -1,8 +1,8 @@
 use admin;
 
 db.createUser({
-  user: "root",
-  pwd: "passw0rd",
+  user: "{{ mongo_root_admin_name }}",
+  pwd: "{{ mongo_user_admin_pwd }}",
   roles: [
     { role: "root", db: "admin" }
   ]
@@ -17,8 +17,8 @@ db.createUser({
 });
 
 db.createUser({
-  user: "useradmin",
-  pwd: "passw0rd",
+  user: "{{ mongo_user_admin_name }}",
+  pwd: "{{ mongo_user_admin_pwd }}",
   roles: [
     { role: "root", db: "admin" }
   ]
