@@ -1,3 +1,4 @@
+---
 mongodb_version: "7.0"
 required_packages:
   - gnupg
@@ -22,6 +23,7 @@ mongo_service_name: mongod
 mongo_service_user: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
 mongo_service_group: "{{ 'mongodb' if ansible_os_family == 'Debian' else 'mongod' }}"
 
+# user creation parameters
 mongo_user_admin_name: "useradmin"
 mongo_user_admin_pwd: "passw0rd"
 mongo_root_admin_name: "root"
@@ -39,7 +41,7 @@ mongo_repo_url: deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-ser
 mongodb_user: mongodb
 mongodb_group: mongodb
 
-# mongo autho key 
+# mongo auth key 
 mongo_authentication_key: |
   yI7blKSIimHaGvZTxjlfSDLgeOGkx4g1wT/U5hvHVWeKLKcbtLVLfmtINPTkzSxz
   0HHazYeG4b0Mq2A9qwL1toE4ieuVOqVXW/XRnUApneOVgvbCzS2UbUWRxTSyBkU1
