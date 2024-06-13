@@ -3,6 +3,13 @@
   ansible.builtin.systemd:
     daemon_reload: "yes"
 
+- name: Enable a mongodb service
+  ansible.builtin.systemd_service:
+    name: "{{ mongo_service_name }}"
+    state: started
+    enabled: true
+  listen: Enabling Mongodb Service
+
 - name: Mongodb_restart
   ansible.builtin.service:
     name: "{{ mongo_service_name }}"

@@ -22,7 +22,6 @@
   ansible.builtin.service:
     name: "{{ mongo_service_name }}"
     enabled: "yes"
-  when: ansible_service_mgr == "systemd"
 
 
 
