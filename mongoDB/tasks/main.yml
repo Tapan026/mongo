@@ -12,7 +12,7 @@
   when: standalone == True or mongodb_cluster == True
 
 - name: Setup auth in slave nodes
-  ansible.builtin.include_tasks: mongoDB_setup_auth.yml
+  ansible.builtin.include_tasks: mongodb_setup_auth.yml
   when: mongodb_cluster == True
 
 - name: Openssl Certification creation 

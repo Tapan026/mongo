@@ -1,11 +1,12 @@
 ---
+
 - name: Initiate_mongo_replication |  Place replication Initiate script on master node
   ansible.builtin.template:
     src: repset_init.j2
     dest: /tmp/repset_init.js
     mode: "0666"
   when: inventory_hostname in groups['mongo_master']
-  
+
 - name: Initiate_mongo_replication |  Check if replication is already configured
   ansible.builtin.shell: |
     mongosh --tls --tlsCAFile {{ ca_directory_path }}/{{ ca_cert_pem_name }} \
@@ -17,10 +18,16 @@
   when: inventory_hostname in groups['mongo_master']
   failed_when: replication_check.rc not in [0, 1]
   changed_when: false
+  # notify:
+  #   - Mongodb_restart
 
-- name: DEBUG
-  ansible.builtin.debug:
-    var: replication_check
+- name: Mongodb_restart
+  ansible.builtin.service:
+    name: "{{ mongo_service_name }}"
+    state: restarted
+
+- name: Waiting for 60 seconds
+  ansible.builtin.command: sleep 60
 
 - name: Initialize the Replica set
   ansible.builtin.shell: |

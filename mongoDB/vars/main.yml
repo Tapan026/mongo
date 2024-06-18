@@ -17,7 +17,7 @@ openssl_cert: True
 authentication_enabled: True
 
 # master server ip
-master_ip: 172.31.56.61
+master_ip: 172.31.20.30
 
 # Openssl Parameter
 tls_enabled: True

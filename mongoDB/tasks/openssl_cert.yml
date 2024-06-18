@@ -183,6 +183,10 @@
   notify:
     - Reload Systemd
     - Enabling Mongodb Service
+    - Mongodb_restart
+
+# - name: Waiting for 60 seconds
+#   ansible.builtin.command: sleep 60
 
 - name: Certificate | Flush all handlers at this point
   ansible.builtin.meta: flush_handlers
