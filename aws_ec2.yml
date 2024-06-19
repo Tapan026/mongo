@@ -11,25 +11,15 @@ keyed_groups:
     separator: ""
 
 hostnames:
-  # Order of precedence for hostname variables
   - name: private-ip-address
-
+  
 compose:
   ansible_host: ip_address
   ansible_user: ubuntu
-  ansible_ssh_private_key_file: "/home/ubuntu/mongo/new_key.pem"
-  
+  ansible_ssh_private_key_file: "/home/ubuntu/mongo/mongo.pem"
+
 groups:
   mongo_master: "'mongo_master' in (tags['Role'] | default(''))"
   mongo_slave: "'mongo_slave' in (tags['Role'] | default(''))"
   new_slave: "'new_slave' in (tags['Role'] | default(''))"
   remove_slave: "'remove_slave' in (tags['Role'] | default(''))"
-
-
-
-
-
-
-
-
-
